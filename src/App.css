@@ -30,3 +30,90 @@
     transform: rotate(360deg);
   }
 }
+
+.formContainer {
+  display:flex;
+  flex-direction: column;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.formContainer > div {
+  margin-bottom: 10px;
+}
+
+.searchBox {
+  width: 100%;
+}
+
+.keywordBox > * {
+  display: block;
+}
+
+.submitButton {
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: white;
+}
+
+.submitButton:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.formContainer > .displayPublisher:hover {
+  border: 1px solid white;
+  ;
+}
+
+.inputField {
+  width: 220px;
+}
+
+.pubContainer {
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  transform: translate(-50%);
+  top: 3%;
+  width: 90%;
+  text-align: left;
+  font-size: 1rem;
+  background-color: #282c34;
+}
+
+.pubContainer > legend {
+  font-size: 1.3rem;
+}
+
+.pubContainer > .displayPublisher {
+  position: absolute;
+  top: 20px;
+  right: 14px;
+  font-size: 1.5rem;
+  width: 30px;
+  z-index: 1;
+}
+
+.pubContainer > .displayPublisher:hover {
+  cursor: pointer;
+}
+
+.pubBox {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.checkBox {
+  position: relative;
+  width: 230px;
+  /* padding-bottom: 5px; */
+}
+
+.pubBox > .checkBox > input {
+  width: 18px;
+  height: 18px;
+  position: relative;
+  top: 4px;
+}
