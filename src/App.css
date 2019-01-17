@@ -1,5 +1,11 @@
+body {
+  font-family: 'Noto Sans', sans-serif;
+}
+
 .App {
   text-align: center;
+  background-color: #282c34;
+  color: white;
 }
 
 .App-logo {
@@ -8,8 +14,8 @@
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
+  background-color: #282c34;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -38,12 +44,33 @@
   font-size: 1rem;
 }
 
-.formContainer > div {
-  margin-bottom: 10px;
+.filter > .displayPublisher {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.filter {
+  margin: 10px 0 20px 0;
+}
+
+.filter > div > label {
+  width: 37px;
 }
 
 .searchBox {
-  width: 100%;
+  font-size: 1rem;
+  text-align: center;
+  width: 260px;
+  margin: 10px 0;
+  padding: 0 10px;
+  height: 30px;
+  border-radius: 2px;
+  border: none;
+  outline: none;
+}
+
+.keywordBox {
+  margin: 0 auto;
 }
 
 .keywordBox > * {
@@ -51,7 +78,10 @@
 }
 
 .submitButton {
-  border-radius: 10px;
+  font-size: 1rem;
+  margin: 0 auto;
+  border-radius: 2px;
+  width: 280px;
   border: none;
   outline: none;
   background-color: white;
@@ -61,13 +91,13 @@
   background-color: rgba(255, 255, 255, 0.6);
 }
 
-.formContainer > .displayPublisher:hover {
-  border: 1px solid white;
-  ;
+.filter > .displayPublisher:hover {
+  color: skyblue;
+  cursor: pointer;
 }
 
 .inputField {
-  width: 220px;
+  z-index: 1;
 }
 
 .pubContainer {
@@ -80,6 +110,7 @@
   text-align: left;
   font-size: 1rem;
   background-color: #282c34;
+  z-index: 1;
 }
 
 .pubContainer > legend {
@@ -116,4 +147,54 @@
   height: 18px;
   position: relative;
   top: 4px;
+}
+
+.list {
+  margin: 20px auto 0 auto;
+  width: 800px;
+}
+
+.cardContainer {
+  text-align: center;
+}
+
+.card {
+  text-align: left;
+  display: inline-block;
+  padding: 12px;
+  margin: 20px 10px;
+  width: 400px;
+  height: 320px;
+  vertical-align: top;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.card > .titleName {
+  font-weight: bold;
+}
+
+.card > .author {
+  position: relative;
+  right: 0;
+  text-align: right;
+}
+
+.card > .cardImg {
+  margin-bottom: 10px;
+}
+
+.card > .cardImg > img {
+  width: 100%;
+}
+
+.dateInput {
+  width: 130px;
+}
+
+.dateBox {
+  display: inline-block;
+}
+
+.dateBox:first-of-type {
+  margin-right: 5px;
 }

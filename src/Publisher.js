@@ -2,21 +2,21 @@ import React, { Component } from 'react';
 import Checkbox from './Checkbox';
 
 class Publisher extends Component {
-    clickToSend = (e) => {
+  clickToSend (target) {
         const { selected } = this.props;
 
         if (selected.length >= 20) {
-            e.target.checked = false;
+            target.checked = false;
             return alert('FULL!');
         }
 
         this.props.onCreate({
-            id: e.target.id,
-            source: e.target.name
+            id: target.id,
+            source: target.name
         });
     }
 
-    createCheckBox = () => {
+    createCheckBox () {
         const { sources, selected } = this.props;
 
         return sources.map(({ id, name }, i) =>
@@ -26,7 +26,7 @@ class Publisher extends Component {
                 label={name}
                 idx={i}
                 key={i}
-                onChange={this.clickToSend}
+                onChange={(e) => this.clickToSend(e.target)}
                 checked={selected.length && (selected.some(v => +(v.id) === i)) ? true : false}
             />
         ));

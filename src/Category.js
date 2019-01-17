@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Checkbox from './Checkbox';
 
 class Category extends Component {
-    list = {
+    static list = {
         data: ['All Categories', 'Business', 'Entertainment', 'Health', 'Sports', 'Science', 'Technology']
     }
 
