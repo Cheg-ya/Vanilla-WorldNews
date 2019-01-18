@@ -156,7 +156,7 @@ body {
 
 .list {
   margin: 20px auto 0 auto;
-  width: 800px;
+  width: 700px;
 }
 
 .cardContainer {
@@ -210,4 +210,29 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #282c34;
+}
+
+.scrollUp {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 4rem;
+}
+
+.scrollUp:hover {
+  cursor: pointer;
+}
+
+.btnLogin {
+  border: none;
+  outline: none;
+  width: 160px;
+  height: 30px;
+  font-size: 1rem;
+  background-color: white;
+}
+
+.btnLogin:hover {
+  cursor: pointer;
+  background-color: #999;
 }

@@ -6,39 +6,50 @@ class List extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modal: false,
+            dispalyModal: false,
             id: null
         };
     }
 
     componentDidMount() {
-        window.addEventListener('scroll', this.onScroll.bind(this));
+        window.addEventListener('scroll', this.infiniteScroll.bind(this));
     }
 
     componentWillUnmount() {
-        window.removeEventListener('scroll', this.onScroll.bind(this));
+        window.removeEventListener('scroll', this.infiniteScroll.bind(this));
     }
 
-    onScroll() {
-        const bottom = document.body.offsetHeight - window.innerHeight - window.scrollY;
+    scrollUp() {
+        window.scroll({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
 
-        if (bottom < 1 || bottom === 0) {
+    infiniteScroll() {
+        const bottom = document.body.offsetHeight - window.innerHeight - window.scrollY;
+        const isLoading = this.props.isLoading;
+
+        if ((bottom < 1 || bottom === 0) && !isLoading) {
             this.props.onChange();
         }
     }
 
     onClick (idx) {
-        if (typeof idx !== 'number') {
+        debugger;
+        if (idx.className === 'listContainer' || idx.className === 'cardContainer') {
             this.setState({
-                modal: !this.state.modal,
+                dispalyModal: !this.state.dispalyModal,
                 id: null
             });    
         }
 
-        this.setState({
-            modal: !this.state.modal,
-            id: idx
-        });
+        if (typeof idx === 'number') {
+            this.setState({
+                dispalyModal: !this.state.dispalyModal,
+                id: idx
+            });
+        }
     }
 
     createList () {
@@ -48,7 +59,7 @@ class List extends Component {
         (
             <fieldset className="list" key={i} onClick={this.onClick.bind(this, i)}>
                 <div className="titleName">{title}</div>
-                <div className="author">{author.slice(0,5) === 'https' ? source.name : author}</div>
+                <div className="author">{author ? author.slice(0,5) === 'https' ? source.name : author : source.name}</div>
                 <div>{source.name} / {publishedAt}</div>
                 {/* <div className="listImg"><img src={urlToImage} alt="" /></div> */}
             </fieldset>
@@ -63,43 +74,55 @@ class List extends Component {
             <fieldset className="card" key={i} onClick={this.onClick.bind(this, i)}>
                 <div className="cardImg"><img src={urlToImage} alt="" /></div>
                 <div className="titleName">{title}</div>
-                <div className="author">{author.slice(0,5) === 'https' ? source.name : author}</div>
+                <div className="author">{author ? author.slice(0,5) === 'https' ? source.name : author : source.name}</div>
             </fieldset>
         ));
     }
 
     render () {
         const { type, articles } = this.props;
-        const { modal, id } = this.state;
+        const { dispalyModal, id } = this.state;
 
-        if (type === 'list' && !modal) {
+        if (type === 'list' && !dispalyModal) {
             return (
                 <div className="listContainer">
+                    <div className="scrollUp" onClick={this.scrollUp}>
+                        <i className="fas fa-arrow-alt-circle-up"></i>
+                    </div>
                     {this.createList()}
                 </div>
             );
 
-        } else if (type === 'card' && !modal) {
+        } else if (type === 'card' && !dispalyModal) {
             return (
                 <div className="cardContainer">
+                    <div className="scrollUp" onClick={this.scrollUp}>
+                        <i className="fas fa-arrow-alt-circle-up"></i>
+                    </div>
                     {this.createCard()}
                 </div>
             );
         }
 
-        if (modal && type === 'list') {
+        if (dispalyModal && type === 'list') {
             return (
-                <div className="listContainer" onClick={this.onClick.bind(this)}>
+                <div className="listContainer" onClick={(e) => this.onClick(e.target)}>
+                    <div className="scrollUp" onClick={this.scrollUp}>
+                        <i className="fas fa-arrow-alt-circle-up"></i>
+                    </div>
                     {this.createList()}
-                    {this.state.modal ? <Modal idx={id} article={articles[id]}/> : null}
+                    {this.state.dispalyModal ? <Modal idx={id} article={articles[id]}/> : null}
                 </div>
             );
 
-        } else if (modal && type === 'card') {
+        } else if (dispalyModal && type === 'card') {
             return (
-                <div className="cardContainer">
+                <div className="cardContainer" onClick={(e) => this.onClick(e.target)}>
+                    <div className="scrollUp" onClick={this.scrollUp}>
+                        <i className="fas fa-arrow-alt-circle-up"></i>
+                    </div>
                     {this.createCard()}
-                    {this.state.modal ? <Modal idx={id} article={articles[id]}/> : null}
+                    {this.state.dispalyModal ? <Modal idx={id} article={articles[id]}/> : null}
                 </div>
             );
         }

@@ -3,6 +3,17 @@ import logo from './logo.svg';
 import './App.css';
 import Publisher from './Publisher';
 import List from './List';
+import firebase from 'firebase';
+
+var config = {
+  apiKey: "AIzaSyAP61JZLVgxBPXjK3YZvSv_LNG5YCKZLMY",
+  authDomain: "vanilla-world-news.firebaseapp.com",
+  databaseURL: "https://vanilla-world-news.firebaseio.com",
+  projectId: "vanilla-world-news",
+  storageBucket: "vanilla-world-news.appspot.com",
+  messagingSenderId: "583004942698"
+};
+firebase.initializeApp(config);
 
 class App extends Component {
   constructor(props) {
@@ -11,14 +22,15 @@ class App extends Component {
     const today = new Date().toISOString().slice(0, 10);
 
     this.state = {
-      login: true,
+      login: false,
       isLoaded: false,
       allLoaded: false,
       displayPublisher: false,
+      scrollRequst: false,
       err: null,
       publishers: [],
       languages: [],
-      keyWords: 'apple',
+      keyWords: '',
       selected: [{id: "27", source: "daily-mail"}],
       page: 1,
       requestResult: [],
@@ -70,6 +82,10 @@ class App extends Component {
     if (!this.state.type) {
       this.setState({
         isLoaded: false
+      });
+    } else {
+      this.setState({
+        scrollRequst: true
       });
     }
 
@@ -131,6 +147,7 @@ class App extends Component {
       this.setState({
         isLoaded: true,
         request: true,
+        scrollRequst: false,
         type,
         requestResult: prevResult.concat(articles)
       });
@@ -245,9 +262,42 @@ class App extends Component {
     this.sourceRequest(this.state.selected);
   }
 
+  googleLogin() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then(result => {
+      this.setState({
+        login: true
+      });
+    }).catch(err => {
+      this.setState({
+        err: err.message
+      });
+    });
+  }
+
   render() {
-    const { type, err, isLoaded, publishers, requestResult, request, displayPublisher, selected} = this.state;
+    const { login, type, err, isLoaded, publishers, requestResult, request, scrollRequst, displayPublisher, selected} = this.state;
     const { dateFrom, dateTo, today} = this.state;
+  
+    if (!login) {
+      const style = {
+        height: '38vh'
+      }
+
+      return (
+        <div className="App">
+          <header className="App-header">
+              <img src={logo} className="App-logo" alt="logo" />
+              <div style={style}>
+                <fieldset>
+                  <legend>Login</legend>
+                  <button className="btnLogin" onClick={this.googleLogin.bind(this)}>Click To Login</button>
+                </fieldset>
+              </div>
+          </header>
+        </div>
+      );
+    }
   
     if (err) {
       return (
@@ -271,7 +321,7 @@ class App extends Component {
         <div className="App">
           <header className="App-header">
               <img src={logo} className="App-logo" alt="logo" />
-              <div style={style}>Page is loading</div>
+              <div style={style}>Page Loading</div>
           </header>
         </div>
       );
@@ -282,7 +332,7 @@ class App extends Component {
         <div className="App">
           <button className={type === 'list' ? "cardType" : "listType"} onClick={(e) => this.viewTypeChangeToggle(e.currentTarget)}>card</button>
           <button name={type === 'list' ? "listType" : "cardType"} className="toMain" onClick={(e) => this.viewTypeChangeToggle(e.currentTarget)}>Main</button>
-          {request ? <List articles={requestResult} type={type === 'list' ? 'list' : 'card'} onChange={this.scrollingRequest.bind(this)}/> : null}
+          {request ? <List articles={requestResult} type={type === 'list' ? 'list' : 'card'} onChange={this.scrollingRequest.bind(this)} isLoading={scrollRequst}/> : null}
         </div>
       );
     }
