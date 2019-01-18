@@ -3,7 +3,6 @@ import logo from './logo.svg';
 import './App.css';
 import Publisher from './Publisher';
 import List from './List';
-import Card from './Card';
 
 class App extends Component {
   constructor(props) {
@@ -12,7 +11,9 @@ class App extends Component {
     const today = new Date().toISOString().slice(0, 10);
 
     this.state = {
+      login: true,
       isLoaded: false,
+      allLoaded: false,
       displayPublisher: false,
       err: null,
       publishers: [],
@@ -65,6 +66,89 @@ class App extends Component {
     });
   }
 
+  sourceRequest (data) {
+    if (!this.state.type) {
+      this.setState({
+        isLoaded: false
+      });
+    }
+
+    if (this.state.allLoaded) {
+      return;
+    }
+
+    console.log(this.state.page);
+    const query = `q=${this.state.keyWords}`;
+    const page = `page=${this.state.page}`;
+    let from;
+
+    if (this.state.dateTo === this.state.dateFrom) {
+      from = '';
+
+    } else {
+      from = `$from=${this.state.dateFrom}&to=${this.state.dateTo}`;
+    }
+
+    let sourceLine = [];
+ 
+    data.forEach(({ source }) => {
+      sourceLine.push(source);
+    });
+
+    sourceLine = `sources=${sourceLine.join(',')}`;
+
+    let url = `https://newsapi.org/v2/everything?${query}${from}&${sourceLine}&sortBy=popularity&${page}&pagesize=30&apiKey=e81a0da4bcf14753a24f74bceadae963`;
+  
+    fetch(url)
+    .then(res => {
+      if (res.status === 200) {
+        return res.json();
+      }
+
+      throw new Error(res.statusText);
+      
+    })
+    .then(result => {
+      const articles = result.articles;
+      const prevResult = this.state.requestResult;
+      let type = this.state.type;
+
+      if (!articles.length && !type) {
+        throw new Error('Not Found Article');
+      }
+
+      if (!articles.length && type) {
+        alert('No More Articles');
+        this.setState({
+          allLoaded: true
+        });
+      }
+      
+      if (!type) {
+        type = 'list';
+      }
+  
+      this.setState({
+        isLoaded: true,
+        request: true,
+        type,
+        requestResult: prevResult.concat(articles)
+      });
+
+    }, (err) => {
+      this.setState({
+        isLoaded: true,
+        err: err.message
+      });
+
+    }).catch(err => {
+      this.setState({
+        isLoaded: true,
+        err: err.message,
+      });
+    });
+  }
+
   handleCreate (data) {
     let item = this.state.selected;
 
@@ -101,69 +185,6 @@ class App extends Component {
   handleSubmit (e) {
     e.preventDefault();
     this.sourceRequest(this.state.selected);
-  } 
-
-  sourceRequest (data) {
-    console.log(this.state.page);
-    const query = `q=${this.state.keyWords}`;
-    const page = `page=${this.state.page}`;
-    let from;
-
-    if (this.state.dateTo === this.state.dateFrom) {
-      from = '';
-
-    } else {
-      from = `$from=${this.state.dateFrom}&to=${this.state.dateTo}`;
-    }
-
-    let sourceLine = [];
- 
-    data.forEach(({ source }) => {
-      sourceLine.push(source);
-    });
-
-    sourceLine = `sources=${sourceLine.join(',')}`;
-
-    let url = `https://newsapi.org/v2/everything?${query}${from}&${sourceLine}&sortBy=popularity&${page}&pagesize=30&apiKey=e81a0da4bcf14753a24f74bceadae963`;
-  
-    fetch(url)
-    .then(res => {
-      if (res.status === 200) {
-        return res.json();
-      }
-
-      throw new Error(res.statusText);
-      
-    })
-    .then(result => {
-      if (!result.articles.length) {
-        throw new Error('No Found Article');
-      }
-
-      const prevResult = this.state.requestResult;
-      let type = this.state.type;
-      
-      if (!type) {
-        type = 'list';
-      }
-  
-      this.setState({
-        request: true,
-        type,
-        requestResult: prevResult.concat(result.articles)
-      });
-
-    }, (err) => {
-      this.setState({
-        request: false,
-        err: err.message
-      });
-
-    }).catch(err => {
-      this.setState({
-        err: err.message,
-      });
-    });
   }
 
   pageReload () {
@@ -243,14 +264,14 @@ class App extends Component {
 
     if (!isLoaded) {
       const style = {
-        height: '163px'
+        height: '38vh'
       }
 
       return (
         <div className="App">
           <header className="App-header">
               <img src={logo} className="App-logo" alt="logo" />
-              <div style={style}>Welcome to World News!</div>
+              <div style={style}>Page is loading</div>
           </header>
         </div>
       );
@@ -261,20 +282,10 @@ class App extends Component {
         <div className="App">
           <button className={type === 'list' ? "cardType" : "listType"} onClick={(e) => this.viewTypeChangeToggle(e.currentTarget)}>card</button>
           <button name={type === 'list' ? "listType" : "cardType"} className="toMain" onClick={(e) => this.viewTypeChangeToggle(e.currentTarget)}>Main</button>
-          {request ? <List data={requestResult} type={type === 'list' ? 'list' : 'card'} onChange={this.scrollingRequest.bind(this)}/> : null}
+          {request ? <List articles={requestResult} type={type === 'list' ? 'list' : 'card'} onChange={this.scrollingRequest.bind(this)}/> : null}
         </div>
       );
     }
-
-    // if (request && cardType) {
-    //   return (
-    //     <div className="App">
-    //       <button className="listType" onClick={(e) => this.viewTypeChangeToggle(e.currentTarget)}>list</button>
-    //       <button name="cardType" className="toMain" onClick={(e) => this.viewTypeChangeToggle(e.currentTarget)}>Main</button>
-    //       {request ? <Card data={requestResult} /> : null}
-    //     </div>
-    //   );
-    // }
 
     return (
       <div className="App">
@@ -311,4 +322,3 @@ class App extends Component {
 }
 
 export default App;
-// https://vanillacoding.slack.com/files/U4Y1084UW/FFF6MPC1K/-.js

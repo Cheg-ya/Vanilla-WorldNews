@@ -2,10 +2,21 @@ import React, { Component } from 'react';
 import Checkbox from './Checkbox';
 
 class Publisher extends Component {
-  clickToSend (target) {
+    clickToSend (target) {
         const { selected } = this.props;
 
         if (selected.length >= 20) {
+            if(selected.some(({ id }) => id === target.id)) {
+                this.props.onCreate({
+                    id: target.id,
+                    source: target.name
+                });
+
+                target.checked = false;
+
+                return;
+            }
+
             target.checked = false;
             return alert('FULL!');
         }
@@ -38,7 +49,7 @@ class Publisher extends Component {
 
         return (
             <fieldset className="pubContainer">
-                <legend>Publisher Listx {selected.length}/20</legend>
+                <legend>Publisher List {selected.length}/20</legend>
                 <div className="displayPublisher" onClick={displayer}><i className="fas fa-times"></i></div>
                 <div className="pubBox">
                     {this.createCheckBox()}
