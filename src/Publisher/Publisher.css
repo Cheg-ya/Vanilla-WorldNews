@@ -1,0 +1,52 @@
+.pubContainer {
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%);
+    top: 3%;
+    width: 93%;
+    text-align: left;
+    font-size: 1rem;
+    background-color: #282c34;
+    z-index: 1;
+}
+  
+.pubContainer > legend {
+    font-size: 1.3rem;
+}
+  
+.pubContainer > .displayPublisher {
+    position: absolute;
+    top: 20px;
+    right: 14px;
+    font-size: 1.5rem;
+    width: 30px;
+    z-index: 1;
+}
+
+.pubContainer > .displayPublisher:hover {
+    cursor: pointer;
+}
+  
+.pubBox {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 600px;
+}
+  
+.pubBox > label {
+    height: 26px;
+}
+  
+.checkBox {
+    position: relative;
+    width: 235px;
+}
+  
+.pubBox > .checkBox > input {
+    width: 18px;
+    height: 18px;
+    position: relative;
+    top: 4px;
+}

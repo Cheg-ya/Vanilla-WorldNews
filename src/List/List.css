@@ -1,0 +1,104 @@
+.list {
+    font-family: 'Noto Sans', sans-serif;
+    position: relative;
+    margin: 20px auto 0 auto;
+    width: 800px;
+    height: 170px;
+    text-align: left;
+    padding: 0;
+}
+
+.list > div {
+    display: inline;
+    vertical-align: top;
+}
+
+.list > .contentCover {
+    display: flex;
+    flex-direction: row;
+    width: inherit;
+    height: inherit;
+}
+
+.listContent {
+    padding: 0 15px;
+    width: 600px;
+}
+
+.listContent > .titleName {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.listContent > .descript {
+    font-size: 0.8rem;
+    margin-bottom: 0;
+    margin-top: 6px;
+}
+
+.listContent > .author, .pubDate {
+    font-size: 0.75rem;
+}
+
+.listImg > img {
+    width: 170px;
+    height: 170px;
+}
+  
+.card {
+    position: relative;
+    text-align: left;
+    display: inline-block;
+    margin: 20px;
+    width: 300px;
+    height: 300px;
+    padding: 0;
+}
+
+.card:hover {
+    cursor: pointer;
+}
+
+.card > .cardContent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+    transition: opacity .3s linear;
+}
+
+.cardContent:hover {
+    background-color: white;
+    color: black;
+    opacity: 0.7;
+}
+
+.cardContent > .titleName {
+    margin-top: 120px;
+    padding-left: 10px;
+    font-weight: bold;
+}
+
+.cardContent > .author {
+    text-align: right;
+    padding-right: 10px;
+    font-size: 0.8rem;
+}
+
+.cardContent > .author > .pub {
+    font-size: 0.7rem;
+}
+
+.card > .cardImg {
+    width: 100%;
+    height: 100%;
+}
+  
+.card > .cardImg > img {
+    width: 100%;
+    height: 100%;
+}

@@ -1,19 +1,9 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Publisher from './Publisher';
-import List from './List';
+import Publisher from './Publisher/Publisher';
+import List from './List/List';
 import firebase from 'firebase';
-
-var config = {
-  apiKey: "AIzaSyAP61JZLVgxBPXjK3YZvSv_LNG5YCKZLMY",
-  authDomain: "vanilla-world-news.firebaseapp.com",
-  databaseURL: "https://vanilla-world-news.firebaseio.com",
-  projectId: "vanilla-world-news",
-  storageBucket: "vanilla-world-news.appspot.com",
-  messagingSenderId: "583004942698"
-};
-firebase.initializeApp(config);
 
 class App extends Component {
   constructor(props) {
@@ -22,7 +12,7 @@ class App extends Component {
     const today = new Date().toISOString().slice(0, 10);
 
     this.state = {
-      login: false,
+      login: true,
       isLoaded: false,
       allLoaded: false,
       displayPublisher: false,
@@ -31,7 +21,7 @@ class App extends Component {
       publishers: [],
       languages: [],
       keyWords: '',
-      selected: [{id: "27", source: "daily-mail"}],
+      selectedPubs: [],
       page: 1,
       requestResult: [],
       request: false,
@@ -40,12 +30,24 @@ class App extends Component {
       dateFrom: today,
       dateTo: today
     };
-
-    this.handleCreate = this.handleCreate.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount () {
+    const config = {
+      apiKey: "AIzaSyAP61JZLVgxBPXjK3YZvSv_LNG5YCKZLMY",
+      authDomain: "vanilla-world-news.firebaseapp.com",
+      databaseURL: "https://vanilla-world-news.firebaseio.com",
+      projectId: "vanilla-world-news",
+      storageBucket: "vanilla-world-news.appspot.com",
+      messagingSenderId: "583004942698"
+    };
+
+    firebase.initializeApp(config);
+
+    this.sourceApiReq();
+  }
+
+  sourceApiReq () {
     fetch('https://newsapi.org/v2/sources?apiKey=e81a0da4bcf14753a24f74bceadae963')
     .then(res => res.json())
     .then((result) => {
@@ -68,7 +70,6 @@ class App extends Component {
         publishers: this.state.publishers.concat(sourceList),
         languages: this.state.languages.concat(languageList)
       });
-
     },
     (err) => {
       this.setState({
@@ -78,24 +79,19 @@ class App extends Component {
     });
   }
 
-  sourceRequest (data) {
-    if (!this.state.type) {
-      this.setState({
-        isLoaded: false
-      });
-    } else {
-      this.setState({
-        scrollRequst: true
-      });
-    }
+  articleApiReq (data) {
+    let query = this.state.keyWords;
 
-    if (this.state.allLoaded) {
+    if (!query.length) {
+      alert('Enter Key word!');
       return;
+
+    } else {
+      query = `q=${query}`;
     }
 
-    console.log(this.state.page);
-    const query = `q=${this.state.keyWords}`;
     const page = `page=${this.state.page}`;
+
     let from;
 
     if (this.state.dateTo === this.state.dateFrom) {
@@ -111,20 +107,37 @@ class App extends Component {
       sourceLine.push(source);
     });
 
-    sourceLine = `sources=${sourceLine.join(',')}`;
+    if (sourceLine.length) {
+      sourceLine = `$sources=${sourceLine.join(',')}`;
+    } else {
+      sourceLine= '';
+    }
 
-    let url = `https://newsapi.org/v2/everything?${query}${from}&${sourceLine}&sortBy=popularity&${page}&pagesize=30&apiKey=e81a0da4bcf14753a24f74bceadae963`;
-  
-    fetch(url)
-    .then(res => {
+    const url = `https://newsapi.org/v2/everything?${query}${from}${sourceLine}&${page}&pagesize=30&apiKey=e81a0da4bcf14753a24f74bceadae963`;
+
+    if (!this.state.type) {
+      this.setState({
+        isLoaded: false
+      });
+
+    } else {
+      this.setState({
+        scrollRequst: true
+      });
+    }
+
+    if (this.state.allLoaded) {
+      return;
+    }
+
+    fetch(url).then(res => {
       if (res.status === 200) {
         return res.json();
       }
 
       throw new Error(res.statusText);
-      
-    })
-    .then(result => {
+
+    }).then(result => {
       const articles = result.articles;
       const prevResult = this.state.requestResult;
       let type = this.state.type;
@@ -139,11 +152,11 @@ class App extends Component {
           allLoaded: true
         });
       }
-      
+
       if (!type) {
         type = 'list';
       }
-  
+
       this.setState({
         isLoaded: true,
         request: true,
@@ -167,28 +180,27 @@ class App extends Component {
   }
 
   handleCreate (data) {
-    let item = this.state.selected;
+    let item = this.state.selectedPubs;
 
     if (!item.length) {
       this.setState({
-        selected: item.concat(data)
+        selectedPubs: item.concat(data)
       });
     }
 
     for (let i = 0; i < item.length; i++) {
       if (item[i].source === data.source) {
         this.setState({
-          selected: item.slice(0,i).concat(item.slice(i + 1))
+          selectedPubs: item.slice(0,i).concat(item.slice(i + 1))
         });
-        console.log(item);
+
         return;
       }
 
       if(i === item.length - 1) {
         this.setState({
-          selected: item.concat(data)
+          selectedPubs: item.concat(data)
         });
-        console.log(item);
       }
     }
   }
@@ -201,7 +213,7 @@ class App extends Component {
 
   handleSubmit (e) {
     e.preventDefault();
-    this.sourceRequest(this.state.selected);
+    this.articleApiReq(this.state.selectedPubs);
   }
 
   pageReload () {
@@ -223,12 +235,13 @@ class App extends Component {
   viewTypeChangeToggle (targetName) {
     if (targetName.className ==='toMain') {
       this.setState({
-        type: null
+        type: null,
+        page: 1
       });
 
       return;
     }
-  
+
     if (targetName.className === 'listType') {
       this.setState({
         type: 'list'
@@ -239,7 +252,6 @@ class App extends Component {
         type: 'card'
       });
     }
-    
   }
 
   handleDateChange (target) {
@@ -247,7 +259,7 @@ class App extends Component {
       return;
     }
 
-    const selectedDate = new Date(target.valueAsNumber).toISOString().slice(0, 10)
+    const selectedDate = new Date(target.valueAsNumber).toISOString().slice(0, 10);
 
     this.setState({
       [target.id]: selectedDate
@@ -259,15 +271,17 @@ class App extends Component {
       page: this.state.page + 1
     });
 
-    this.sourceRequest(this.state.selected);
+    this.articleApiReq(this.state.selectedPubs);
   }
 
   googleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider();
+
     firebase.auth().signInWithPopup(provider).then(result => {
       this.setState({
         login: true
       });
+
     }).catch(err => {
       this.setState({
         err: err.message
@@ -276,9 +290,9 @@ class App extends Component {
   }
 
   render() {
-    const { login, type, err, isLoaded, publishers, requestResult, request, scrollRequst, displayPublisher, selected} = this.state;
+    const { login, type, err, isLoaded, publishers, requestResult, request, scrollRequst, displayPublisher, selectedPubs} = this.state;
     const { dateFrom, dateTo, today} = this.state;
-  
+
     if (!login) {
       const style = {
         height: '38vh'
@@ -298,7 +312,7 @@ class App extends Component {
         </div>
       );
     }
-  
+
     if (err) {
       return (
         <div className="App">
@@ -330,8 +344,11 @@ class App extends Component {
     if (request && type) {
       return (
         <div className="App">
-          <button className={type === 'list' ? "cardType" : "listType"} onClick={(e) => this.viewTypeChangeToggle(e.currentTarget)}>card</button>
-          <button name={type === 'list' ? "listType" : "cardType"} className="toMain" onClick={(e) => this.viewTypeChangeToggle(e.currentTarget)}>Main</button>
+          <fieldset className="optionBtn">
+            <legend>Option</legend>
+            <button className={type === 'list' ? "cardType" : "listType"} onClick={(e) => this.viewTypeChangeToggle(e.currentTarget)}>{type === 'list' ? 'Card View' : 'List View'}</button>
+            <button name={type === 'list' ? "listType" : "cardType"} className="toMain" onClick={(e) => this.viewTypeChangeToggle(e.currentTarget)}>Click To Main</button>
+          </fieldset>
           {request ? <List articles={requestResult} type={type === 'list' ? 'list' : 'card'} onChange={this.scrollingRequest.bind(this)} isLoading={scrollRequst}/> : null}
         </div>
       );
@@ -343,7 +360,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <fieldset className="inputField">
             <legend>World News!</legend>
-            <form className="formContainer" onSubmit={this.handleSubmit}>
+            <form className="formContainer" onSubmit={this.handleSubmit.bind(this)}>
               <div className="keywordBox">
                 <input name="keyWords" className="searchBox" type="text" placeholder="Topic" onChange={(e) => this.handleKeywordChange(e.target.value)} />
               </div>
@@ -364,7 +381,7 @@ class App extends Component {
               <button className="submitButton" type="submit">Click to Search</button>
             </form>
           </fieldset>
-          {displayPublisher ? <Publisher sources={publishers} selected={selected} onCreate={this.handleCreate} onClick={(e) => this.displayer(e.currentTarget.className)} /> : null}
+          {displayPublisher ? <Publisher sources={publishers} selected={selectedPubs} onCreate={this.handleCreate.bind(this)} onClick={(e) => this.displayer(e.currentTarget.className)} /> : null}
         </header>
       </div>
     );

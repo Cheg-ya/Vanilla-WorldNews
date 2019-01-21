@@ -1,5 +1,5 @@
 body {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: 'Noticia Text', serif;
 }
 
 .App {
@@ -100,100 +100,11 @@ body {
   z-index: 1;
 }
 
-.pubContainer {
-  position: absolute;
-  left: 50%;
-  right: 50%;
-  transform: translate(-50%);
-  top: 3%;
-  width: 93%;
-  text-align: left;
-  font-size: 1rem;
-  background-color: #282c34;
-  z-index: 1;
-}
-
-.pubContainer > legend {
-  font-size: 1.3rem;
-}
-
-.pubContainer > .displayPublisher {
-  position: absolute;
-  top: 20px;
-  right: 14px;
-  font-size: 1.5rem;
-  width: 30px;
-  z-index: 1;
-}
-
-.pubContainer > .displayPublisher:hover {
-  cursor: pointer;
-}
-
-.pubBox {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  height: 600px;
-}
-
-.pubBox > label {
-  height: 26px;
-}
-
-.checkBox {
-  position: relative;
-  width: 235px;
-  /* padding-bottom: 5px; */
-}
-
-.pubBox > .checkBox > input {
-  width: 18px;
-  height: 18px;
-  position: relative;
-  top: 4px;
-}
-
-.list {
-  margin: 20px auto 0 auto;
-  width: 700px;
-}
-
-.cardContainer {
-  text-align: center;
-}
-
-.card {
-  text-align: left;
-  display: inline-block;
-  padding: 12px;
-  margin: 20px 10px;
-  width: 400px;
-  height: 320px;
-  vertical-align: top;
-  background-color: rgba(255, 255, 255, 0.3);
-}
-
-.card > .titleName {
-  font-weight: bold;
-}
-
-.card > .author {
-  position: relative;
-  right: 0;
-  text-align: right;
-}
-
-.card > .cardImg {
-  margin-bottom: 10px;
-}
-
-.card > .cardImg > img {
-  width: 100%;
-}
-
 .dateInput {
   width: 130px;
+  border-radius: 2px;
+  border: none;
+  padding: 2px 4px;
 }
 
 .dateBox {
@@ -202,14 +113,6 @@ body {
 
 .dateBox:first-of-type {
   margin-right: 5px;
-}
-
-.modalContainer {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #282c34;
 }
 
 .scrollUp {
@@ -230,9 +133,30 @@ body {
   height: 30px;
   font-size: 1rem;
   background-color: white;
+  border-radius: 2px;
 }
 
 .btnLogin:hover {
   cursor: pointer;
+  background-color: #999;
+}
+
+.optionBtn {
+  margin: 0 auto;
+  width: 200px;
+  font-size: 1.5rem;
+}
+
+.optionBtn > button {
+  border: none;
+  outline: none;
+  border-radius: 2px;
+  width: 100%;
+  font-size: 0.9rem;
+  height: 30px;
+  background-color: white;
+}
+
+.optionBtn > button:hover {
   background-color: #999;
 }

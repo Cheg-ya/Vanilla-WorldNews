@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import Checkbox from './Checkbox';
+import './Publisher.css';
 
 class Publisher extends Component {
-    clickToSend (target) {
+    isChecked (target) {
         const { selected } = this.props;
 
         if (selected.length >= 20) {
@@ -37,7 +38,7 @@ class Publisher extends Component {
                 label={name}
                 idx={i}
                 key={i}
-                onChange={(e) => this.clickToSend(e.target)}
+                onChange={(e) => this.isChecked(e.target)}
                 checked={selected.length && (selected.some(v => +(v.id) === i)) ? true : false}
             />
         ));

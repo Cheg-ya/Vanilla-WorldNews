@@ -1,0 +1,73 @@
+.modalBackground {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(0, 0, 0, 0.7);
+    width: 100vw;
+    height: 100vh;
+}
+
+.modalContainer {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1000px;
+    height: 400px;
+    padding: 0;
+    background-color: #282c34;
+}
+
+.imgCover > .modalImg {
+    width: 400px;
+    height: 400px;
+}
+
+.modal {
+    display: flex;
+    flex-direction: row;
+}
+
+.modalContent > .title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin: 30px 0;
+}
+
+
+.modalContent {
+    padding: 6px 10px;
+    width: 100%;
+}
+
+.modalContent > .author {
+    text-align: right;
+    padding-right: 10px;
+    margin: 10px 0;
+}
+
+.modalContent > .decript {
+    font-size: 0.8rem;
+    text-align: justify;
+    padding-left: 20px;
+    padding-right: 10px;
+}
+
+.modalContent > .content {
+    font-style: italic;
+    font-size: 1.1rem;
+    text-align: justify;
+    padding-left: 20px;
+    padding-right: 10px;
+    margin-bottom: 0;
+}
+
+.modalContent > .date {
+    position: absolute;
+    bottom: 16px;
+    /* left: 420px; */
+    right: 20px;
+    text-align: right;
+    font-size: 0.8rem;
+}
