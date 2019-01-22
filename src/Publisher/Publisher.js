@@ -4,10 +4,10 @@ import './Publisher.css';
 
 class Publisher extends Component {
     isChecked (target) {
-        const { selected } = this.props;
+        const { selectedPubs } = this.props;
 
-        if (selected.length >= 20) {
-            if(selected.some(({ id }) => id === target.id)) {
+        if (selectedPubs.length >= 20) {
+            if(selectedPubs.some(({ id }) => id === target.id)) {
                 this.props.onCreate({
                     id: target.id,
                     source: target.name
@@ -19,6 +19,7 @@ class Publisher extends Component {
             }
 
             target.checked = false;
+
             return alert('FULL!');
         }
 
@@ -29,7 +30,7 @@ class Publisher extends Component {
     }
 
     createCheckBox () {
-        const { sources, selected } = this.props;
+        const { sources, selectedPubs } = this.props;
 
         return sources.map(({ id, name }, i) =>
         (
@@ -39,18 +40,18 @@ class Publisher extends Component {
                 idx={i}
                 key={i}
                 onChange={(e) => this.isChecked(e.target)}
-                checked={selected.length && (selected.some(v => +(v.id) === i)) ? true : false}
+                checked={selectedPubs.length && (selectedPubs.some(v => +(v.id) === i)) ? true : false}
             />
         ));
     }
 
     render () {
-        const { selected, onClick } = this.props;
+        const { selectedPubs, onClick } = this.props;
         const displayer = onClick;
 
         return (
             <fieldset className="pubContainer">
-                <legend>Publisher List {selected.length}/20</legend>
+                <legend>Publisher List {selectedPubs.length}/20</legend>
                 <div className="displayPublisher" onClick={displayer}><i className="fas fa-times"></i></div>
                 <div className="pubBox">
                     {this.createCheckBox()}

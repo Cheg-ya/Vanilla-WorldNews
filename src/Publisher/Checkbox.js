@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 
 class Checkbox extends Component {
   render() {
-    const { onChange, sourceId, label, idx, checked} = this.props;
+    const {onChange, sourceId, label, idx, checked} = this.props;
+    const isChecked = onChange;
 
     return (
       <label className="checkBox">
@@ -10,7 +11,7 @@ class Checkbox extends Component {
         name={sourceId}
         id={idx}
         checked={checked}
-        onChange={onChange}
+        onChange={isChecked}
       />{label}</label>
     );
   }

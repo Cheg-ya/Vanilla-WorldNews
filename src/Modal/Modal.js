@@ -14,9 +14,10 @@ class Modal extends Component {
     render() {
         const { article, idx, onClick } = this.props;
         const { source, title, author, urlToImage, publishedAt, url, description, content } = article;
+        const showModal = onClick;
 
         return (
-            <div className="modalBackground" onClick={onClick}>
+            <div className="modalBackground" onClick={showModal}>
                 <fieldset className="modalContainer" id={idx}>
                     <div className="modal">
                         <a className="imgCover" href={url}>

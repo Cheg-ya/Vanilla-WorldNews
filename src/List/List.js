@@ -30,9 +30,10 @@ class List extends Component {
     infiniteScroll() {
         const bottom = document.body.offsetHeight - window.innerHeight - window.scrollY;
         const isLoading = this.props.isLoading;
+        const ajaxRequst = this.props.onChange;
 
         if ((bottom < 1 || bottom === 0) && !isLoading) {
-            this.props.onChange();
+            ajaxRequst();
         }
     }
 

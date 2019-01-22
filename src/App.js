@@ -12,14 +12,13 @@ class App extends Component {
     const today = new Date().toISOString().slice(0, 10);
 
     this.state = {
-      login: true,
+      login: false,
       isLoaded: false,
       allLoaded: false,
       displayPublisher: false,
       scrollRequst: false,
       err: null,
       publishers: [],
-      languages: [],
       keyWords: '',
       selectedPubs: [],
       page: 1,
@@ -52,29 +51,23 @@ class App extends Component {
     .then(res => res.json())
     .then((result) => {
       let sourceList = [];
-      let languageList = new Set();
 
       result.sources.forEach(v => {
         sourceList.push({
           name: v.name,
           id: v.id
         });
-
-        languageList.add(v.language);
       });
-
-      languageList = Array.from(languageList);
 
       this.setState({
         isLoaded: true,
-        publishers: this.state.publishers.concat(sourceList),
-        languages: this.state.languages.concat(languageList)
+        publishers: this.state.publishers.concat(sourceList)
       });
     },
     (err) => {
       this.setState({
         isLoaded: true,
-        err
+        err,
       });
     });
   }
@@ -168,13 +161,15 @@ class App extends Component {
     }, (err) => {
       this.setState({
         isLoaded: true,
-        err: err.message
+        err: err.message,
+        keyWords:''
       });
 
     }).catch(err => {
       this.setState({
         isLoaded: true,
         err: err.message,
+        keyWords:''
       });
     });
   }
@@ -197,7 +192,7 @@ class App extends Component {
         return;
       }
 
-      if(i === item.length - 1) {
+      if (i === item.length - 1) {
         this.setState({
           selectedPubs: item.concat(data)
         });
@@ -236,7 +231,8 @@ class App extends Component {
     if (targetName.className ==='toMain') {
       this.setState({
         type: null,
-        page: 1
+        page: 1,
+        keyWords: ''
       });
 
       return;
@@ -284,7 +280,7 @@ class App extends Component {
 
     }).catch(err => {
       this.setState({
-        err: err.message
+        err: err.message,
       });
     });
   }
@@ -317,7 +313,7 @@ class App extends Component {
       return (
         <div className="App">
           <header className="App-header">
-              <div>Error Message: {err}</div>
+              <div>Ooops! {err}</div>
               <img src={logo} className="App-logo" alt="logo" />
               <div>Please Try Again</div>
               {this.pageReload()}
@@ -381,7 +377,7 @@ class App extends Component {
               <button className="submitButton" type="submit">Click to Search</button>
             </form>
           </fieldset>
-          {displayPublisher ? <Publisher sources={publishers} selected={selectedPubs} onCreate={this.handleCreate.bind(this)} onClick={(e) => this.displayer(e.currentTarget.className)} /> : null}
+          {displayPublisher ? <Publisher sources={publishers} selectedPubs={selectedPubs} onCreate={this.handleCreate.bind(this)} onClick={(e) => this.displayer(e.currentTarget.className)} /> : null}
         </header>
       </div>
     );
