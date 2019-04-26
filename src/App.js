@@ -35,10 +35,6 @@ class App extends Component {
     const config = {
       apiKey: "AIzaSyAP61JZLVgxBPXjK3YZvSv_LNG5YCKZLMY",
       authDomain: "vanilla-world-news.firebaseapp.com",
-      databaseURL: "https://vanilla-world-news.firebaseio.com",
-      projectId: "vanilla-world-news",
-      storageBucket: "vanilla-world-news.appspot.com",
-      messagingSenderId: "583004942698"
     };
 
     firebase.initializeApp(config);
